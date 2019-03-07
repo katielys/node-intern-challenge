@@ -1,7 +1,8 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const calcsRouter = require('./routes/calcs');
-
+global.db = require('./routes/db');
+const logURL = require('./routes/logURL')
 const env = process.env.NODE_ENV || 'development';
 
 const app = express();
@@ -9,15 +10,58 @@ const app = express();
 // ----- Middlewares -----
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(logURL)
+
 // ----- Middlewares -----
 
 
 // ----- Routes -----
+
 app.get('/hello', (req, res) => {
-  res.status(200).send({message: 'hello world'});
+  res.send('hello world');
+});
+app.use('/calcs', calcsRouter);
+
+
+	
+app.get('/delete/:id', function(req, res) {
+  var id = req.params.id;
+  global.db.deleteOne(id, (e, r) => {
+        if(e) { return console.log(e); }
+        res.redirect('/');
+      });
+});
+app.get('/edit/:id', function(req, res, next) {
+ var id = req.params.id;
+  global.db.findOne(id, (e, docs) => {
+      if(e) { return console.log(e); }
+      res.send('new', { title: 'Edição livro', doc: docs[0], action: '/edit/' + docs[0]._id });
+    });
 });
 
-app.use('/calcs', calcsRouter);
+app.get('/find/:id', function(req, res, next) {
+  var id = req.params.id;
+  global.db.findOne(id, (e, docs) => {
+      if(e) { return console.log(e); }
+      res.send('new', { title: 'Mostrando Livro', doc: docs[0], action: '/edit/' + docs[0]._id });
+    });
+})
+app.get('/new/id/:bookID/nome/:nome', function (req, res) {
+ // res.send(req.params)
+var nome = req.params.nome;
+//console.log(req.params.nome);
+var bookID = req.params.bookID;
+
+   global.db.insert({bookID, nome}, (err, result) => {
+          if(err) { return console.log(err); }
+          res.redirect('/');
+      })
+//http://localhost:7777/new/id/:32/nome/:nome
+})
+
+
+	
+
 // ----- Routes -----
 
 

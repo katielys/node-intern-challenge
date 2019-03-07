@@ -37,4 +37,26 @@ curl -X POST http://localhost:7777/calcs/fib -H 'Content-Type: application/json'
 
 ## Resultados
 
+###Para inserir um novo livro :
+	http://localhost:7777/new/id/:bookID/nome/:NOMEDOlivro
 
+	no campo onde ha :bookID insira o id do livro e no local NOMEDOlivro coloque o titulo do livro desejado.
+###Para excluir um livro: 
+```
+http://localhost:7777/delete/id/:bookID
+```
+
+Para excluir um livro, digite o id dele no local onde ha bookID
+###Para editar um livro:
+```
+http://localhost:7777/edit/id/:bookID
+```
+
+Para editar um livro, digite o id dele no local onde ha bookID,outra pagina sera carregada e voce deve digitar o novo nome.
+
+###Para Buscar um livro:	
+```
+http://localhost:7777/find/id/:bookID
+```
+
+Para buscar um livro, digite o id dele no local onde ha bookID
